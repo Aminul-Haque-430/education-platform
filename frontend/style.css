@@ -1,0 +1,85 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  margin: 0;
+  min-height: 100vh;
+}
+
+aside#sidebar {
+  width: 220px;
+  background: #f5f5f5;
+  padding: 20px;
+}
+
+#toggleSidebar {
+  display: none;
+}
+
+.category-list button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: none;
+  background: #e0e0e0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.category-list button.active {
+  background: #4CAF50;
+  color: white;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.card {
+  flex: 1 1 calc(33% - 20px);
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: none;
+  background: #f44336;
+  color: white;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+#spinner {
+  font-size: 18px;
+  margin: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .card { flex: 1 1 calc(50% - 20px); }
+}
+@media (max-width: 600px) {
+  .card { flex: 1 1 100%; }
+  #toggleSidebar { display: block; margin-bottom: 10px; }
+  aside#sidebar { width: 100%; padding: 10px; }
+}

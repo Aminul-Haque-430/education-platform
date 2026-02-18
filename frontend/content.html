@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Content Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<header>
+    <h1>Global Education Library</h1>
+</header>
+
+<section style="padding: 30px;" id="contentArea">
+</section>
+
+<footer>
+    <p>© 2026 Global Education Library. All rights reserved.</p>
+</footer>
+
+<script>
+let params = new URLSearchParams(window.location.search);
+let id = params.get("id");
+
+fetch("content.json")
+    .then(response => response.json())
+    .then(data => {
+        let item = data.find(content => content.id == id);
+        let contentArea = document.getElementById("contentArea");
+
+        if (item) {
+            contentArea.innerHTML = `
+                <h2>${item.title}</h2>
+                <small><strong>${item.type}</strong></small>
+                <p>${item.fullContent}</p>
+            `;
+        } else {
+            contentArea.innerHTML = "<p>Content not found.</p>";
+        }
+    });
+</script>
+
+</body>
+</html>

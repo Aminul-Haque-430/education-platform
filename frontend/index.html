@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Education Library</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <button id="toggleSidebar">☰ Categories</button>
+    <div class="category-list">
+      <button id="allBtn" data-category="all" class="category-btn active">All (<span id="allCount">0</span>)</button>
+      <button id="paragraphBtn" data-category="paragraphs" class="category-btn">Paragraphs (<span id="paragraphCount">0</span>)</button>
+      <button id="applicationBtn" data-category="applications" class="category-btn">Applications (<span id="applicationCount">0</span>)</button>
+      <button id="storiesBtn" data-category="stories" class="category-btn">Stories (<span id="storiesCount">0</span>)</button>
+    </div>
+    <input type="text" id="searchInput" placeholder="Search content...">
+  </aside>
+
+  <!-- Main content -->
+  <main>
+    <h1>Global Education Library</h1>
+    <div id="cardsContainer" class="cards-container">
+      <div id="spinner" class="spinner">Loading...</div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
