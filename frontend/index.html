@@ -1,33 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Education Library</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Education Platform Search</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 30px;
+}
+
+h1 {
+  margin-bottom: 15px;
+}
+
+input {
+  padding: 8px;
+  width: 260px;
+}
+
+button {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+#result {
+  margin-top: 25px;
+}
+
+.version {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+</style>
 </head>
+
 <body>
 
-  <!-- Sidebar -->
-  <aside id="sidebar">
-    <button id="toggleSidebar">☰ Categories</button>
-    <div class="category-list">
-      <button id="allBtn" data-category="all" class="category-btn active">All (<span id="allCount">0</span>)</button>
-      <button id="paragraphBtn" data-category="paragraphs" class="category-btn">Paragraphs (<span id="paragraphCount">0</span>)</button>
-      <button id="applicationBtn" data-category="applications" class="category-btn">Applications (<span id="applicationCount">0</span>)</button>
-      <button id="storiesBtn" data-category="stories" class="category-btn">Stories (<span id="storiesCount">0</span>)</button>
-    </div>
-    <input type="text" id="searchInput" placeholder="Search content...">
-  </aside>
+<h1>Education Platform Search</h1>
 
-  <!-- Main content -->
-  <main>
-    <h1>Global Education Library</h1>
-    <div id="cardsContainer" class="cards-container">
-      <div id="spinner" class="spinner">Loading...</div>
-    </div>
-  </main>
+<input type="text" id="search" placeholder="Enter keyword">
+<button id="searchBtn">Search</button>
 
-  <script src="script.js"></script>
+<!-- ✅ Adjusted result container -->
+<div id="result"></div>
+
+<script>
+async function searchApps() {
+  const keyword = document.getElementById("search").value.trim().toLowerCase();
+  const resultDiv = document.getElementById("result");
+
+  resultDiv.innerHTML = "";
+
+  if (!keyword) {
+    resultDiv.innerHTML = "<p>Please enter a keyword.</p>";
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/apps");
+    const apps = await response.json();
+
+    let found = false;
+
+    apps.forEach(app => {
+      if (!app.versions) return;
+
+      app.versions.forEach(v => {
+        if (v.html && v.html.toLowerCase().includes(keyword)) {
+          const div = document.createElement("div");
+          div.className = "version";
+          div.innerHTML = `
+            <h3>${app.title} — Version ${v.version}</h3>
+            ${v.html}
+          `;
+          resultDiv.appendChild(div);
+          found = true;
+        }
+      });
+    });
+
+    if (!found) {
+      resultDiv.innerHTML = "<p>No matching applications found.</p>";
+    }
+
+  } catch (error) {
+    resultDiv.innerHTML = "<p>Error loading applications.</p>";
+    console.error(error);
+  }
+}
+
+// Button click
+document.getElementById("searchBtn").addEventListener("click", searchApps);
+
+// Enter key support
+document.getElementById("search").addEventListener("keydown", e => {
+  if (e.key === "Enter") searchApps();
+});
+</script>
+
 </body>
 </html>
