@@ -1,108 +1,47 @@
+// server.js
+require("dotenv").config(); // Load .env at the top
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
-const fs = require("fs");
+const mongoose = require("mongoose");
 const path = require("path");
-require("dotenv").config();
+const fs = require("fs");
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Enable CORS
 app.use(cors());
-app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI;
+// Serve static HTML applications
+app.use("/applications", express.static(path.join(__dirname, "applications")));
 
-/* ================================
-   MongoDB Connection
-================================ */
-if (!MONGO_URI) {
-  console.error("❌ MONGO_URI not found in .env");
-  process.exit(1);
-}
+// Welcome route
+app.get("/", (req, res) => {
+  res.send("Hello Amin! Your education platform is live and ready to explore");
+});
 
-mongoose
-  .connect(MONGO_URI, {
+// Applications index route
+app.get("/applications-index", (req, res) => {
+  const indexPath = path.join(__dirname, "applications-index.json");
+  if (!fs.existsSync(indexPath)) {
+    return res.status(404).json({ error: "Applications index not found" });
+  }
+
+  const indexData = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
+  res.json(indexData);
+});
+
+// Optional MongoDB connection
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  .then(() => console.log("✅ MongoDB connected successfully"))
-  .catch(err => {
-    console.error("❌ MongoDB connection failed:", err);
-    process.exit(1);
-  });
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.error("❌ MongoDB connection failed:", err));
+} else {
+  console.warn("⚠️ MONGO_URI not defined in .env — skipping MongoDB connection");
+}
 
-/* ================================
-   Homepage
-================================ */
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "index.html"));
-});
-
-/* ================================
-   Serve Converted HTML Applications
-   URL: /application/filename.html
-================================ */
-app.get("/application/:filename", (req, res) => {
-  const filePath = path.join(
-    __dirname,
-    "html-applications",
-    req.params.filename
-  );
-
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).send("❌ Application not found");
-  }
-
-  res.sendFile(filePath);
-});
-
-/* ================================
-   Serve Applications Search Index
-   URL: /applications-index
-================================ */
-app.get("/applications-index", (req, res) => {
-  const indexPath = path.join(__dirname, "applications-index.json");
-
-  if (!fs.existsSync(indexPath)) {
-    return res.status(404).send("❌ Index file not found");
-  }
-
-  res.sendFile(indexPath);
-});
-
-/* ================================
-   API: Return All Applications Data
-   URL: /api/apps
-================================ */
-app.get("/api/apps", (req, res) => {
-  const appsDir = path.join(__dirname, "applications");
-
-  if (!fs.existsSync(appsDir)) {
-    return res.status(404).json({ error: "Applications directory not found" });
-  }
-
-  const folders = fs.readdirSync(appsDir);
-  const data = [];
-
-  folders.forEach(folder => {
-    const contentPath = path.join(appsDir, folder, "content.json");
-
-    if (fs.existsSync(contentPath)) {
-      try {
-        const jsonData = JSON.parse(fs.readFileSync(contentPath, "utf8"));
-        data.push(jsonData);
-      } catch (err) {
-        console.error(`❌ Invalid JSON in ${folder}/content.json`);
-      }
-    }
-  });
-
-  res.json(data);
-});
-
-/* ================================
-   Start Server
-================================ */
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+// Start server
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

@@ -1,16 +1,7 @@
 {
-  "nid correction": "1. National Identity Card (NID) Correction.html",
-  "national id correction": "1. National Identity Card (NID) Correction.html",
-
-  "absence competition": "2 Absence due to competition.html",
-  "sports competition absence": "2 Absence due to competition.html",
-
-  "absence transportation": "3 Absence due to transportation issues.html",
-  "transport problem": "3 Absence due to transportation issues.html",
-
-  "academic calendar": "4 Academic calendar management.html",
-  "semester schedule": "4 Academic calendar management.html",
-
-  "academic forum": "5 Academic forum and discussion boards.html",
-  "discussion board": "5 Academic forum and discussion boards.html"
+  "national identity card": "1-national-identity-card-nid-correction.html",
+  "absence due to competition": "2-absence-due-to-competition.html",
+  "absence due to transportation issues": "3-absence-due-to-transportation-issues.html",
+  "academic calendar management": "4-academic-calendar-management.html",
+  "academic forum": "5-academic-forum-and-discussion-boards.html"
 }
